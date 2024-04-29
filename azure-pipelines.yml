@@ -1,0 +1,45 @@
+trigger:
+  batch: "true"
+  branches:
+    include:  
+      - '*'
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+
+- task: UseDotNet@2
+  inputs:
+    version: '6.0.x'
+
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'SonarCloud'
+    organization: 'costin'
+    scannerMode: 'MSBuild'
+    projectKey: 'costin'
+    projectName: 'costin'
+    extraProperties: 
+      sonar.verbose=true
+
+    
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
