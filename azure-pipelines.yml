@@ -1,7 +1,7 @@
 trigger:
   batch: "true"
   branches:
-    include:  
+    include:
       - '*'
 
 pool:
@@ -16,7 +16,7 @@ steps:
 
 - task: UseDotNet@2
   inputs:
-    version: '6.0.x'
+    version: '8.0.x'
 
 - task: SonarCloudPrepare@1
   inputs:
@@ -28,10 +28,9 @@ steps:
     extraProperties: 
       sonar.verbose=true
 
-    
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
-  
+
 - task: SonarCloudAnalyze@1
 
 - task: SonarCloudPublish@1
